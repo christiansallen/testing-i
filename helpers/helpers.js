@@ -1,24 +1,3 @@
-const createItem = (name, type) => {
-  const item = {
-    name: name,
-    type: type,
-    durability: 100,
-    enhancement: 0
-  };
-  return item;
-};
-
-let sword = createItem("sword", "weapon");
-let shield = createItem("shield", "armor");
-let bow = createItem("bow", "weapon");
-let helmet = createItem("helmet", "armor");
-let spear = createItem("spea", "weapon");
-
-shield.enhancement = 18;
-bow.durability = 20;
-helmet.durability = 8;
-helmet.enhancement = 19;
-
 //------------------------ ITEM CHECKS --------------------------
 
 const checkType = type => {
@@ -66,9 +45,11 @@ const durabilityWithHighEnhancement = (durability, enhancement) => {
 
 //------------------------ REPAIR CHECK --------------------------
 
-const repair = item => {
-  item.durability = 100;
-  return item;
+const repairItem = {
+  repair(item) {
+    item.durability = 100;
+    return item;
+  }
 };
 
 //------------------------ ENHANCEMENT CHECK --------------------------
@@ -117,6 +98,14 @@ const failHighEnhancement = item => {
 
 //------------------------ ENHANCEMENT SUCCESS CHECKS --------------------------
 
+const successItem = {
+  enhancement(item) {
+    item.enhancement += 1;
+    item.name = `[+${item.enhancement}] ${item.name}`;
+    return item;
+  }
+};
+
 const enhancementSuccess = item => {
   item.enhancement += 1;
   return item.enhancement;
@@ -129,17 +118,13 @@ module.exports = {
   maxDurability,
   durabilityWithLowEnhancement,
   durabilityWithHighEnhancement,
-  repair,
-  sword,
-  shield,
-  bow,
-  helmet,
-  spear,
+  repairItem,
   failDurabilityWithEnhancement,
   failEnhancementLevel,
   failLowEnhancement,
   failHighEnhancement,
   enhancementSuccess,
   defaultItemEnhancement,
-  checkMaxEnhancement
+  checkMaxEnhancement,
+  successItem
 };

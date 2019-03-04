@@ -43,8 +43,15 @@ describe("Item tests", () => {
 
 describe("Repair Test", () => {
   it("check if durability is restored to 100", () => {
-    const restored = helpers.repair(helpers.sword);
-    expect(restored.durability).toBe(100);
+    let item = {
+      name: "sword",
+      type: "weapon",
+      durability: 40,
+      enhancement: 2
+    };
+
+    helpers.repairItem.repair(item);
+    expect(item.durability).toBe(100);
   });
 });
 
@@ -92,8 +99,22 @@ describe("Enhancement Failure Tests", () => {
 //----------------SUCCESS CHECKS
 
 describe("Enhancement Success Tests", () => {
-  it("increases enhancement by 1 if enhancement is between 0 and 20.", () => {
-    const check = helpers.enhancementSuccess(helpers.spear);
-    expect(check).toBe(1);
+  it("check enhancement increased by 1", () => {
+    const item = {
+      name: "sword",
+      type: "weapon",
+      durability: 40,
+      enhancement: 2
+    };
+
+    const expected = {
+      name: "[+3] sword",
+      type: "weapon",
+      durability: 40,
+      enhancement: 3
+    };
+
+    helpers.successItem.enhancement(item);
+    expect(item).toEqual(expected);
   });
 });
