@@ -1,45 +1,71 @@
 //------------------------ ITEM CHECKS --------------------------
 
-const checkType = type => {
-  if (type === "weapon" || type === "armor") {
-    return 1;
-  } else {
-    return 0;
-  }
-};
-
-const checkEnhancement = enhancement => {
-  if (enhancement >= 0 && enhancement <= 20) {
-    return 1;
-  } else {
-    return 0;
-  }
-  //   } else {
-  //     throw new Error(`Your enhancement level must be between 0 and 20`);
-  //   }
-};
-
-const maxDurability = durability => {
-  if (durability <= 100) {
-    return 1;
-  } else {
-    return 0;
-  }
-};
-
-const durabilityWithLowEnhancement = (durability, enhancement) => {
-  if (enhancement >= 0 && enhancement <= 14 && durability >= 20) {
-    return 1;
-  } else {
-    return 0;
-  }
-};
-
-const durabilityWithHighEnhancement = (durability, enhancement) => {
-  if (enhancement >= 15 && enhancement <= 20 && durability >= 0) {
-    return 1;
-  } else {
-    return 0;
+const item = {
+  lowEnhancementDurability(item) {
+    if (
+      item.enhancement >= 0 &&
+      item.enhancement <= 14 &&
+      item.durability >= 20
+    ) {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  highEnhancementDurability(item) {
+    if (
+      item.enhancement >= 15 &&
+      item.enhancement <= 20 &&
+      item.durability >= 0
+    ) {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  checkType(item) {
+    if (item.type === "weapon" || item.type === "armor") {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  checkEnhancement(item) {
+    if (item.enhancement >= 0 && item.enhancement <= 20) {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  checkDurability(item) {
+    if (item.durability <= 100) {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  displayName(item) {
+    if (item.enhancement === 0) {
+      return item;
+    } else if (item.enhancement != 0 && item.enhancement <= 15) {
+      item.name = `[+${item.enhancement}] ${item.name}`;
+      return item;
+    } else if (item.enhancement === 16) {
+      item.name = `[+PRI] ${item.name}`;
+      return item;
+    } else if (item.enhancement === 17) {
+      item.name = `[+DUO] ${item.name}`;
+      return item;
+    } else if (item.enhancement === 18) {
+      item.name = `[+TRI] ${item.name}`;
+      return item;
+    } else if (item.enhancement === 19) {
+      item.name = `[+TET] ${item.name}`;
+      return item;
+    } else if (item.enhancement === 20) {
+      item.name = `[+PEN] ${item.name}`;
+      return item;
+    }
   }
 };
 
@@ -64,35 +90,52 @@ const checkMaxEnhancement = item => {
 
 //------------------------ ENHANCEMENT FAIL CHECKS --------------------------
 
-const failDurabilityWithEnhancement = item => {
-  if (item.enhancement >= 0 && item.enhancement <= 14) {
-    return item.durability - 5;
-  } else if (item.enhancement >= 15 && item.enhancement <= 20) {
-    return item.durability - 10;
-  } else {
-    throw new Error("enhancement needs to be between 0 and 20.");
-  }
-};
-
-const failEnhancementLevel = item => {
-  if (item.enhancement >= 16 && item.enhancement <= 20) {
-    return item.enhancement - 1;
-  }
-};
-
-const failLowEnhancement = item => {
-  if (item.enhancement <= 14 && item.durability < 25) {
-    return 1;
-  } else {
-    return 0;
-  }
-};
-
-const failHighEnhancement = item => {
-  if (item.enhancement > 14 && item.enhancement < 21 && item.durability < 10) {
-    return 1;
-  } else {
-    return 0;
+const failItem = {
+  durabilityWithEnhancement(item) {
+    if (item.enhancement >= 0 && item.enhancement <= 14) {
+      return item.durability - 5;
+    } else if (item.enhancement >= 15 && item.enhancement <= 20) {
+      return item.durability - 10;
+    } else {
+      throw new Error("enhancement needs to be between 0 and 20.");
+    }
+  },
+  enhancementLevel(item) {
+    if (item.enhancement >= 16 && item.enhancement <= 20) {
+      return item.enhancement - 1;
+    }
+  },
+  lowEnhancement(item) {
+    if (item.enhancement <= 14 && item.durability < 25) {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  highEnhancement(item) {
+    if (
+      item.enhancement > 14 &&
+      item.enhancement < 21 &&
+      item.durability < 10
+    ) {
+      return 1;
+    } else {
+      return 0;
+    }
+  },
+  armorEnhancement(item) {
+    if (item.type === "armor" && item.enhancement < 5) {
+      return "Can't fail enhancement if enhancement is below 5 and type is armor";
+    } else {
+      return 0;
+    }
+  },
+  weaponEnhancement(item) {
+    if (item.type === "weapon" && item.enhancement < 7) {
+      return "Can't fail enhancement if enhancement is below 7 and type is weapon";
+    } else {
+      return 0;
+    }
   }
 };
 
@@ -106,25 +149,9 @@ const successItem = {
   }
 };
 
-const enhancementSuccess = item => {
-  item.enhancement += 1;
-  return item.enhancement;
-};
-
 module.exports = {
-  createItem,
-  checkType,
-  checkEnhancement,
-  maxDurability,
-  durabilityWithLowEnhancement,
-  durabilityWithHighEnhancement,
+  item,
   repairItem,
-  failDurabilityWithEnhancement,
-  failEnhancementLevel,
-  failLowEnhancement,
-  failHighEnhancement,
-  enhancementSuccess,
-  defaultItemEnhancement,
-  checkMaxEnhancement,
-  successItem
+  successItem,
+  failItem
 };
